@@ -16,16 +16,8 @@ import {
 
 import {
   Stitch,
-  AnonymousCredential,
-  UserPasswordCredential,
   UserPasswordAuthProviderClient,
 } from 'mongodb-stitch-react-native-sdk';
-
-// const client = Stitch.initializeDefaultAppClient('workey-tgxhu');
-
-const emailPasswordClient = Stitch.defaultAppClient.auth.getProviderClient(
-  UserPasswordAuthProviderClient.factory,
-);
 
 const QuicksandSM = styled.Text`
   font-family: Quicksand-SemiBold;
@@ -38,7 +30,9 @@ const Value = styled(QuicksandSM)`
   color: #ffbb30;
 `;
 
-class Login extends React.Component {
+const client = Stitch.initializeDefaultAppClient('workey-tgxhu');
+
+class Signup extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -46,11 +40,41 @@ class Login extends React.Component {
       phoneNumber: '',
       password: '',
       showPassword: false,
+      client: undefined,
+      currentUserId: undefined,
     };
 
-    this.submitRegistration = this.submitRegistration.bind(this);
     this.showPassword = this.showPassword.bind(this);
     this.hidePassword = this.hidePassword.bind(this);
+    this.loadClient = this.loadClient.bind(this);
+    this.authenticateRegistration = this.authenticateRegistration.bind(this);
+  }
+
+  componentDidMount() {
+    this.loadClient();
+  }
+
+  loadClient() {
+    client.then(client => {
+      this.setState({client});
+
+      if (client.auth.isLoggedIn) {
+        this.setState({currentUserId: client.auth.user.id});
+      }
+
+      client.close();
+    });
+  }
+
+  authenticateRegistration(email, password) {
+    const emailPasswordClient = Stitch.defaultAppClient.auth.getProviderClient(
+      UserPasswordAuthProviderClient.factory,
+    );
+
+    emailPasswordClient
+      .registerWithEmail(email, password)
+      .then(() => console.log(`Success ${email} - ${password}`))
+      .catch(e => console.log(`${e}`));
   }
 
   showPassword() {
@@ -59,29 +83,6 @@ class Login extends React.Component {
 
   hidePassword() {
     this.setState({showPassword: false});
-  }
-
-  submitRegistration(email, phoneNumber, password) {
-    emailPasswordClient
-      .registerWithEmail(email, password)
-      .then(() => console.log('Success'))
-      .catch(err => `Error ${err}`);
-  }
-
-  onSubmitHandler(email, phoneNumber, password) {
-    if (this.state.email) {
-      if (this.state.password) {
-        if (this.state.phoneNumber) {
-          this.submitRegistration(email, phoneNumber, password);
-        } else {
-          alert('Please input your phone number');
-        }
-      } else {
-        alert('Please input your password');
-      }
-    } else {
-      alert('Please input your email');
-    }
   }
   render() {
     const {navigate} = this.props.navigation;
@@ -160,9 +161,8 @@ class Login extends React.Component {
                 alignSelf: 'center',
               }}
               onPress={() =>
-                this.onSubmitHandler(
+                this.authenticateRegistration(
                   this.state.email,
-                  this.state.phoneNumber,
                   this.state.password,
                 )
               }>
@@ -201,4 +201,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login;
+export default Signup;

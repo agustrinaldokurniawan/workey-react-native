@@ -8,7 +8,7 @@ import SplashScreenFeature from '../src/SplashScreen/SplashScreenFeature';
 import LoginScreen from '../src/Account/login';
 import SignupScreen from '../src/Account/signup';
 
-import Login from '../src/Stitch/authentication';
+// import Login from '../src/Stitch/authentication';
 
 const Stack = createStackNavigator();
 

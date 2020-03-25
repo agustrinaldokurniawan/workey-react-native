@@ -13,6 +13,7 @@ import {
   Text,
   Icon,
 } from 'native-base';
+
 import {
   Stitch,
   AnonymousCredential,
