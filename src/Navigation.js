@@ -20,11 +20,11 @@ const Navigation = () => (
         component={Login}
         options={{headerShown: false}}
       /> */}
-      {/* <Stack.Screen
+      <Stack.Screen
         name="SplashScreenFeature"
         component={SplashScreenFeature}
         options={{headerShown: false}}
-      /> */}
+      />
       <Stack.Screen
         name="SignupScreen"
         component={SignupScreen}
