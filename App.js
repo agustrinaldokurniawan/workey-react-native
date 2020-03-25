@@ -1,12 +1,20 @@
 import React from 'react';
-import {} from 'native-base';
-import SplashScreen from './src/SplashScreen/index';
-import HomeScreen from './src/HomeScreen';
+
+import SplashScreenLogo from './src/SplashScreen/index';
+import Navigation from './src/Navigation';
 
 class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLogin: false,
+    };
+  }
   render() {
-    // return <SplashScreen />;
-    return <HomeScreen />;
+    if (this.state.isLogin) {
+      return <SplashScreenLogo />;
+    }
+    return <Navigation />;
   }
 }
 
